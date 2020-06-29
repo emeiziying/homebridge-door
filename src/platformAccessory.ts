@@ -13,7 +13,6 @@ export interface AccessoryConfig {
   name: string;
   gpioA: number;
   gpioB: number;
-  delay: number;
 }
 
 /**

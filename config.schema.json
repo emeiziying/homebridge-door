@@ -27,12 +27,6 @@
               "type": "number",
               "required": true,
               "default": "18"
-            },
-            "delay": {
-              "title": "Delay",
-              "type": "number",
-              "required": true,
-              "default": "500"
             }
           }
         }
