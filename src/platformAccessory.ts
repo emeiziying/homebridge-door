@@ -28,9 +28,8 @@ export class DoorAccessory {
    * These are just used to create a working example
    * You should implement your own code to track the state of your accessory
    */
-  private exampleStates = {
+  private doorStates = {
     On: false,
-    Brightness: 100,
   };
 
   private config: AccessoryConfig;
@@ -61,8 +60,8 @@ export class DoorAccessory {
     // get the LightBulb service if it exists, otherwise create a new LightBulb service
     // you can create multiple services for each accessory
     this.service =
-      this.accessory.getService(this.platform.Service.Door) ||
-      this.accessory.addService(this.platform.Service.Door);
+      this.accessory.getService(this.platform.Service.Switch) ||
+      this.accessory.addService(this.platform.Service.Switch);
 
     // To avoid "Cannot add a Service with the same UUID another Service without also defining a unique 'subtype' property." error,
     // when creating multiple services of the same type, you need to use the following syntax to specify a name and subtype id:
@@ -85,9 +84,9 @@ export class DoorAccessory {
       .on('get', this.getOn.bind(this)); // GET - bind to the `getOn` method below
 
     // register handlers for the Brightness Characteristic
-    this.service
-      .getCharacteristic(this.platform.Characteristic.Brightness)
-      .on('set', this.setBrightness.bind(this)); // SET - bind to the 'setBrightness` method below
+    // this.service
+    //   .getCharacteristic(this.platform.Characteristic.Brightness)
+    //   .on('set', this.setBrightness.bind(this)); // SET - bind to the 'setBrightness` method below
 
     // EXAMPLE ONLY
     // Example showing how to update the state of a Characteristic asynchronously instead
@@ -95,21 +94,21 @@ export class DoorAccessory {
     //
     // Here we change update the brightness to a random value every 5 seconds using
     // the `updateCharacteristic` method.
-    setInterval(() => {
-      // assign the current brightness a random value between 0 and 100
-      const currentBrightness = Math.floor(Math.random() * 100);
+    // setInterval(() => {
+    //   // assign the current brightness a random value between 0 and 100
+    //   const currentBrightness = Math.floor(Math.random() * 100);
 
-      // push the new value to HomeKit
-      this.service.updateCharacteristic(
-        this.platform.Characteristic.Brightness,
-        currentBrightness,
-      );
+    //   // push the new value to HomeKit
+    //   this.service.updateCharacteristic(
+    //     this.platform.Characteristic.Brightness,
+    //     currentBrightness,
+    //   );
 
-      this.platform.log.debug(
-        'Pushed updated current Brightness state to HomeKit:',
-        currentBrightness,
-      );
-    }, 10000);
+    //   this.platform.log.debug(
+    //     'Pushed updated current Brightness state to HomeKit:',
+    //     currentBrightness,
+    //   );
+    // }, 10000);
   }
 
   /**
@@ -118,9 +117,31 @@ export class DoorAccessory {
    */
   setOn(value: CharacteristicValue, callback: CharacteristicSetCallback) {
     // implement your own code to turn your device on/off
-    this.exampleStates.On = value as boolean;
+    this.doorStates.On = value as boolean;
 
     this.platform.log.debug('Set Characteristic On ->', value);
+
+    this.relayA.writeSync(1);
+
+    setTimeout(() => {
+      this.relayA.writeSync(0);
+    }, 300);
+
+    setTimeout(() => {
+      this.relayB.writeSync(1);
+    }, 500);
+
+    setTimeout(() => {
+      this.relayB.writeSync(0);
+    }, 800);
+
+    setTimeout(() => {
+      this.doorStates.On = false;
+      this.service.updateCharacteristic(
+        this.platform.Characteristic.On,
+        this.doorStates.On,
+      );
+    }, 1000);
 
     // you must call the callback function
     callback(null);
@@ -141,7 +162,7 @@ export class DoorAccessory {
    */
   getOn(callback: CharacteristicGetCallback) {
     // implement your own code to check if the device is on
-    const isOn = this.exampleStates.On;
+    const isOn = this.doorStates.On;
 
     this.platform.log.debug('Get Characteristic On ->', isOn);
 
@@ -149,22 +170,5 @@ export class DoorAccessory {
     // the first argument should be null if there were no errors
     // the second argument should be the value to return
     callback(null, isOn);
-  }
-
-  /**
-   * Handle "SET" requests from HomeKit
-   * These are sent when the user changes the state of an accessory, for example, changing the Brightness
-   */
-  setBrightness(
-    value: CharacteristicValue,
-    callback: CharacteristicSetCallback,
-  ) {
-    // implement your own code to set the brightness
-    this.exampleStates.Brightness = value as number;
-
-    this.platform.log.debug('Set Characteristic Brightness -> ', value);
-
-    // you must call the callback function
-    callback(null);
   }
 }
