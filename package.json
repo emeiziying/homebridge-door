@@ -1,5 +1,4 @@
 {
-  "private": true,
   "displayName": "Homebridge Door",
   "name": "homebridge-door",
   "version": "0.0.1",
