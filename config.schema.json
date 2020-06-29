@@ -5,23 +5,37 @@
   "schema": {
     "type": "object",
     "properties": {
-      "name": {
-        "title": "Name",
-        "type": "string",
-        "required": true,
-        "default": "Door"
-      },
-      "gpioA": {
-        "title": "Gpio A",
-        "type": "number",
-        "required": true,
-        "default": "17"
-      },
-      "gpioB": {
-        "title": "Gpio B",
-        "type": "number",
-        "required": true,
-        "default": "18"
+      "accessories": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "title": "Name",
+              "type": "string",
+              "required": true,
+              "default": "Door"
+            },
+            "gpioA": {
+              "title": "Gpio A",
+              "type": "number",
+              "required": true,
+              "default": "17"
+            },
+            "gpioB": {
+              "title": "Gpio B",
+              "type": "number",
+              "required": true,
+              "default": "18"
+            },
+            "delay": {
+              "title": "Delay",
+              "type": "number",
+              "required": true,
+              "default": "500"
+            }
+          }
+        }
       }
     }
   }

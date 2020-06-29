@@ -9,6 +9,13 @@ import { Gpio } from 'onoff';
 
 import { DoorPlatform } from './platform';
 
+export interface AccessoryConfig {
+  name: string;
+  gpioA: number;
+  gpioB: number;
+  delay: number;
+}
+
 /**
  * Platform Accessory
  * An instance of this class is created for each accessory your platform registers
@@ -26,10 +33,18 @@ export class DoorAccessory {
     Brightness: 100,
   };
 
+  private config: AccessoryConfig;
+  private readonly relayA: any;
+  private readonly relayB: any;
+
   constructor(
     private readonly platform: DoorPlatform,
     private readonly accessory: PlatformAccessory,
   ) {
+    this.config = accessory.context.device as AccessoryConfig;
+    this.relayA = new Gpio(this.config.gpioA, 'out');
+    this.relayB = new Gpio(this.config.gpioB, 'out');
+
     // set accessory information
     this.accessory
       .getService(this.platform.Service.AccessoryInformation)!
@@ -46,8 +61,8 @@ export class DoorAccessory {
     // get the LightBulb service if it exists, otherwise create a new LightBulb service
     // you can create multiple services for each accessory
     this.service =
-      this.accessory.getService(this.platform.Service.Lightbulb) ||
-      this.accessory.addService(this.platform.Service.Lightbulb);
+      this.accessory.getService(this.platform.Service.Door) ||
+      this.accessory.addService(this.platform.Service.Door);
 
     // To avoid "Cannot add a Service with the same UUID another Service without also defining a unique 'subtype' property." error,
     // when creating multiple services of the same type, you need to use the following syntax to specify a name and subtype id:
@@ -57,7 +72,7 @@ export class DoorAccessory {
     // in this example we are using the name we stored in the `accessory.context` in the `discoverDevices` method.
     this.service.setCharacteristic(
       this.platform.Characteristic.Name,
-      accessory.context.device.exampleDisplayName,
+      accessory.context.device.name,
     );
 
     // each service must implement at-minimum the "required characteristics" for the given service type
@@ -93,7 +108,6 @@ export class DoorAccessory {
       this.platform.log.debug(
         'Pushed updated current Brightness state to HomeKit:',
         currentBrightness,
-        
       );
     }, 10000);
   }
