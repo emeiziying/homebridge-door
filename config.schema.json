@@ -1,5 +1,5 @@
 {
-  "pluginAlias": "ExampleHomebridgePlugin",
+  "pluginAlias": "HomebridgeDoor",
   "pluginType": "platform",
   "singular": true,
   "schema": {
@@ -9,7 +9,19 @@
         "title": "Name",
         "type": "string",
         "required": true,
-        "default": "Example Dynamic Platform"
+        "default": "Door"
+      },
+      "gpioA": {
+        "title": "Gpio A",
+        "type": "number",
+        "required": true,
+        "default": "17"
+      },
+      "gpioB": {
+        "title": "Gpio B",
+        "type": "number",
+        "required": true,
+        "default": "18"
       }
     }
   }
