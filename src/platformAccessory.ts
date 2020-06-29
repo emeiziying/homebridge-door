@@ -33,8 +33,8 @@ export class DoorAccessory {
   };
 
   private config: AccessoryConfig;
-  private readonly relayA: any;
-  private readonly relayB: any;
+  private readonly relayA: Gpio;
+  private readonly relayB: Gpio;
 
   constructor(
     private readonly platform: DoorPlatform,
