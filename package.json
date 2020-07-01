@@ -1,7 +1,7 @@
 {
   "displayName": "Homebridge Door",
   "name": "homebridge-door",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Remotely activate the access control system downstairs",
   "license": "Apache-2.0",
   "repository": {
