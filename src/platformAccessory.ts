@@ -84,7 +84,7 @@ export class DoorAccessory {
     // implement your own code to turn your device on/off
     this.doorStates.On = value as boolean;
 
-    this.platform.log.debug('Set Characteristic On ->', value);
+    this.platform.log.info('Set Switch On ->', value);
 
     this.relayA.writeSync(1);
 
@@ -115,7 +115,7 @@ export class DoorAccessory {
   getOn(callback: CharacteristicGetCallback) {
     const isOn = this.doorStates.On;
 
-    this.platform.log.debug('Get Characteristic On ->', isOn);
+    this.platform.log.info('Get Switch On ->', isOn);
 
     callback(null, isOn);
   }
